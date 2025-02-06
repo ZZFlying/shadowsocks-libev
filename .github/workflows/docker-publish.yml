@@ -9,14 +9,12 @@ jobs:
   build:
     runs-on: ubuntu-24.04-arm
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
     
-    - name: Build image
-      run: |
-        docker build -t zzflying/shadowsocks-libev:latest .
+      - name: Build the Docker image
+        run: docker build -t zzflying/shadowsocks-libev:latest .
 
-    - name: Upload image
-      uses: ishworkh/container-image-artifact-upload@v2.0.0
-      with:
-        image: "zzflying/shadowsocks-libev:latest"
+      - name: Upload image
+        uses: ishworkh/container-image-artifact-upload@v2.0.0
+        with:
+          image: "zzflying/shadowsocks-libev:latest"
