@@ -86,7 +86,6 @@ CMD exec ss-local \
     -k $PASSWORD \
     -m $METHOD \
     -t $TIMEOUT \
-    -d $DNS_ADDRS \
     -b 0.0.0.0 \
     -l 8388 \
     --reuse-port \
