@@ -80,7 +80,8 @@ EXPOSE $LOCAL_PORT/tcp $LOCAL_PORT/udp
 USER nobody
 
 # Start shadowsocks-libev local
-CMD exec ss-local \
+CMD exec privoxy /etc/privoxy/config && \
+    ss-local \
     -s $SERVER_HOST \
     -p $SERVER_PORT \
     -k $PASSWORD \
