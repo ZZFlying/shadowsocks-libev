@@ -53,7 +53,7 @@ RUN set -ex \
             | xargs -r apk info --installed \
             | sort -u \
     )" \
-    && apk add --no-cache --virtual .ss-rundeps $ssRunDeps \
+    && apk add --no-cache --virtual .ss-rundeps privoxy $ssRunDeps \
     && cd / \
     && rm -rf /tmp/build-shadowsocks-libev \
     # Delete dependencies
@@ -61,29 +61,34 @@ RUN set -ex \
 
 # Copy v2ray-plugin
 COPY --from=golang /go/src/github.com/teddysun/v2ray-plugin/v2ray-plugin /usr/local/bin
+# Copy privoxy config
+COPY ./privoxy.config /etc/privoxy/config
 
 # Shadowsocks environment variables
+ENV SERVER_HOST ChangeMe!!!
 ENV SERVER_PORT 8388
+ENV LOCAL_PORT 1080
 ENV PASSWORD ChangeMe!!!
 ENV METHOD chacha20-ietf-poly1305
 ENV TIMEOUT 86400
 ENV DNS_ADDRS 1.1.1.1,1.0.0.1,2606:4700:4700::1111,2606:4700:4700::1001
 ENV ARGS -u
 
-EXPOSE $SERVER_PORT/tcp $SERVER_PORT/udp
+EXPOSE $LOCAL_PORT/tcp $LOCAL_PORT/udp
 
 # Run as nobody
 USER nobody
 
-# Start shadowsocks-libev server
-CMD exec ss-server \
-    -s 0.0.0.0 \
-    -s ::0 \
+# Start shadowsocks-libev local
+CMD exec ss-local \
+    -s $SERVER_HOST \
     -p $SERVER_PORT \
     -k $PASSWORD \
     -m $METHOD \
     -t $TIMEOUT \
     -d $DNS_ADDRS \
+    -b 0.0.0.0 \
+    -l 8388 \
     --reuse-port \
     --no-delay \
     $ARGS
