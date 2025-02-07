@@ -76,8 +76,5 @@ ENV ARGS -u
 
 EXPOSE $LOCAL_PORT/tcp $LOCAL_PORT/udp
 
-# Run as nobody
-USER nobody
-
 # Start shadowsocks-libev local
-CMD ["sh", "-c", "ss-local -s $SERVER_HOST -p $SERVER_PORT -k $PASSWORD -m $METHOD -t $TIMEOUT -b 0.0.0.0 -l 8388 --reuse-port --no-delay $ARGS && privoxy /etc/privoxy/config"]
+CMD ["sh", "-c", "privoxy /etc/privoxy/config && ss-local -s $SERVER_HOST -p $SERVER_PORT -k $PASSWORD -m $METHOD -t $TIMEOUT -b 0.0.0.0 -l 8388 --reuse-port --no-delay $ARGS"]
